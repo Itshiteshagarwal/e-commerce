@@ -12,9 +12,9 @@
   </div>
   
   <script>
-    // Function to fetch products from the API and display them on the page
+
     async function fetchProducts() {
-      const categoryId = 3; // Replace this with the actual categoryId
+      const categoryId = 3; 
       const apiUrl = `https://rest-api5.onrender.com/products/api/products?categoryId=${categoryId}`; // Replace this with the actual API endpoint
 
       try {
@@ -34,7 +34,7 @@
     // Function to display products on the page
     function displayProducts(products) {
       const productContainer = document.getElementById('product-container');
-      const username = localStorage.getItem("username"); // Change "userId" to "username"
+      const username = localStorage.getItem("username"); 
 
       products.forEach((product) => {
         const productElement = document.createElement('div');
@@ -52,17 +52,17 @@
     }
 
     // Function to add the product to the cart
-    async function addToCart(productId, productName, productPrice, productImage, username) { // Change the parameter name from "userId" to "username"
-      const quantity = 1; // Replace this with the desired quantity
+    async function addToCart(productId, productName, productPrice, productImage, username) { 
+      const quantity = 1; 
 
-      const apiUrl = `https://rest-api5.onrender.com/add_cart/add_to_cart`; // Replace this with the actual API endpoint to add the product to the cart
+      const apiUrl = `https://rest-api5.onrender.com/add_cart/add_to_cart`; 
 
       const data = {
-        username: username, // Change "userId" to "username"
+        username: username,
         productId: productId,
         productName: productName,
         productPrice: productPrice,
-        productImage: productImage, // Include the product image in the data object
+        productImage: productImage, 
         quantity: quantity,
       };
 

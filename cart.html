@@ -86,9 +86,7 @@
       cursor: pointer;
     }
     
-    /* Adjust the position of the button within the list item */
-    
-    /* Center the button text within the button */
+
     .logout {
       justify-content: center;
       align-items: center;
@@ -262,6 +260,71 @@
       margin: 0 10px;
     }
 
+    @media screen and (max-width: 768px) {
+  /* Header */
+  .head-head {
+    text-align: center;
+    position: static;
+    margin-top: 0;
+  }
+
+  /* Navigation bar */
+  nav ul {
+    flex-direction: column;
+  }
+
+  nav ul li {
+    margin: 10px 0;
+  }
+
+  /* Cart page */
+  .container {
+    width: 90vw;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-item-image {
+    width: 100%;
+  }
+
+  .cart-item-details {
+    flex: 1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .cart-item-quantity {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .quantity-label {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .quantity-input {
+    width: 60px;
+  }
+
+  .total-amount {
+    text-align: center;
+  }
+
+  .empty-cart-message {
+    margin-bottom: 10px;
+  }
+
+  /* Footer */
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
   </style>
 </head>
 <body>
@@ -290,7 +353,7 @@
     <h1>Your Cart</h1>
 
     <div class="cart-items" id="cart-items">
-      <!-- Cart items will be displayed here dynamically using JavaScript -->
+
     </div>
 
     <div class="total-amount" id="total-amount">Total Amount: ₹0.00</div>
@@ -335,7 +398,7 @@ async function fetchCartProducts() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": username, // Set the username in the Authorization header
+        "Authorization": username, 
       },
     });
 
@@ -350,7 +413,6 @@ async function fetchCartProducts() {
   }
 }
 
-    // Function to display cart products on the page
     const placeholderImageUrl = 'https://example.com/placeholder-image.jpg';
 
 function displayCartProducts(cartProducts) {
@@ -358,7 +420,7 @@ function displayCartProducts(cartProducts) {
   const totalAmountElement = document.getElementById('total-amount');
   let cartTotal = 0;
 
-  cartItemsContainer.innerHTML = ''; // Clear previous content
+  cartItemsContainer.innerHTML = ''; 
 
   cartProducts.forEach((cartProduct) => {
     const cartProductElement = document.createElement('div');
@@ -379,7 +441,6 @@ function displayCartProducts(cartProducts) {
 
     cartItemsContainer.appendChild(cartProductElement);
 
-    // Calculate cart total only if productPrice and quantity are valid
     if (cartProduct.productPrice && cartProduct.quantity) {
       cartTotal += cartProduct.productPrice * cartProduct.quantity;
     }
@@ -391,7 +452,7 @@ function displayCartProducts(cartProducts) {
   const emptyCartMessage = document.getElementById('empty-cart-message');
   emptyCartMessage.style.display = cartProducts.length === 0 ? 'block' : 'none';
 }
-// Function to update the quantity of a cart item
+
 async function updateQuantity(input, productName) {
   const quantity = parseInt(input.value, 10);
 
@@ -405,7 +466,7 @@ async function updateQuantity(input, productName) {
 
   try {
     const response = await fetch(apiUrl, {
-      method: 'PATCH', // Use PATCH method to update the quantity
+      method: 'PATCH', 
       headers: {
         'Content-Type': 'application/json',
         'Authorization': localStorage.getItem('jwtToken'),
@@ -415,7 +476,6 @@ async function updateQuantity(input, productName) {
     });
 
     if (response.ok) {
-      // Quantity updated successfully, update the cart products after successful update
       fetchCartProducts();
     } else {
       const data = await response.json();
@@ -442,7 +502,6 @@ async function removeItem(productName) {
     });
 
     if (response.ok) {
-      // Item removed successfully, update the cart products after successful removal
       fetchCartProducts();
     } else {
       // Handle error responses
@@ -456,10 +515,8 @@ async function removeItem(productName) {
 
 
 function logout() {
-      // Clear the JWT token from local storage
       localStorage.removeItem("jwtToken");
 
-      // Redirect to the login page after logout
       window.location.href = "login.html";
     }
 

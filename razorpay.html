@@ -1,4 +1,4 @@
-<!-- index.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +21,7 @@
     <p>Amount Paid: <span id="amountPaid"></span> paise</p>
     <p>Email: <span id="emailDisplay"></span></p>
     <p>Delivery Address: <span id="deliveryAddressDisplay"></span></p>
-    <p>Delivery Date: <span id="deliveryDateDisplay"></span></p>
+    <p>Delivery Upto: <span id="deliveryDateDisplay"></span></p>
   </div>
 
   <style>
@@ -146,9 +146,7 @@
               verifyPayment(orderId, paymentId, signature);
             },
             prefill: {
-              // Add customer details here if needed
-              // name: 'Customer Name',
-              // email: 'Customer Email',
+
             },
           };
           const rzp = new Razorpay(options);
