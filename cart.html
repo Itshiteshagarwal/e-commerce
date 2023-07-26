@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Shopping Cart</title>
+  <title>E-Cart shopping</title>
   <style>
-
-    * {
+ 
+ * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -77,7 +77,27 @@
       color: #D7D67B; 
       text-decoration: underline; 
     }
-
+    .logout {
+      background-color: #4E9781;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    /* Adjust the position of the button within the list item */
+    
+    /* Center the button text within the button */
+    .logout {
+      justify-content: center;
+      align-items: center;
+    }
+    .logout:hover{
+      color: #D7D67B; 
+      text-decoration: underline;
+    }
+    
 
     /* Cart page */
     .container {
@@ -260,7 +280,8 @@
       <li><a href="home.html">Home</a></li>
       <li><a href="category.html">Categories</a></li>
       <li><a href="#">Cart</a></li>
-      <li><a href="login.html">Login</a>
+      <li><button class="logout" onclick="logout()">Logout</button></li>
+      <li>Welcome to the cart page <span id="username-placeholder"></span></li>
       </li>
     </ul>
   </nav>
@@ -268,100 +289,178 @@
   <div class="container">
     <h1>Your Cart</h1>
 
-    <div class="cart-items">
-      <div class="cart-item">
-        <img class="cart-item-image" src="product1.jpg" alt="Product 1">
-        <div class="cart-item-details">
-          <div class="cart-item-name">Product 1</div>
-          <div class="cart-item-price">₹19.99</div>
-          <div class="cart-item-quantity">
-            <label class="quantity-label">Quantity:</label>
-            <input class="quantity-input" type="number" value="1" min="1" onchange="updateTotal(this)">
-          </div>
-          <div class="cart-item-total">₹19.99</div>
-        </div>
-        <button class="remove-button" onclick="removeItem(this)">Remove</button>
-      </div>
-
-      <div class="cart-item">
-        <img class="cart-item-image" src="product2.jpg" alt="Product 2">
-        <div class="cart-item-details">
-          <div class="cart-item-name">Product 2</div>
-          <div class="cart-item-price">₹29.99</div>
-          <div class="cart-item-quantity">
-            <label class="quantity-label">Quantity:</label>
-            <input class="quantity-input" type="number" value="1" min="1" onchange="updateTotal(this)">
-          </div>
-          <div class="cart-item-total">₹29.99</div>
-        </div>
-        <button class="remove-button" onclick="removeItem(this)">Remove</button>
-      </div>
+    <div class="cart-items" id="cart-items">
+      <!-- Cart items will be displayed here dynamically using JavaScript -->
     </div>
 
-    <div class="total-amount">Total Amount: ₹49.98</div>
+    <div class="total-amount" id="total-amount">Total Amount: ₹0.00</div>
 
     <div class="empty-cart-message" id="empty-cart-message" style="display: none;">Your cart is empty</div>
     
     <div style="text-align: right;">   
-      <button class="place-order-button" onclick="placeOrder()">Place Order</button>
+      <button class="place-order-button" onclick="placeOrder()">Confirm Order</button>
     </div>
   </div>
 
 <footer>
-    <div class="container">
-      <p>&copy; 2023 Shopping Website. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#">Terms of Service</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Contact Us</a>
-      </div>
+  <div class="container">
+    <p>&copy; 2023 Shopping Website. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Contact Us</a>
     </div>
-  </footer>
+  </div>
+</footer>
 
   <script>
-    function updateTotal(input) {
-      const quantity = input.value;
-      const itemContainer = input.parentNode.parentNode;
-      const priceElement = itemContainer.querySelector(".cart-item-price");
-      const totalElement = itemContainer.querySelector(".cart-item-total");
 
-      const price = parseFloat(priceElement.textContent.slice(1));
-      const total = price * quantity;
-      totalElement.textContent = "₹" + total.toFixed(2);
+  function placeOrder() {
+    window.location.href = 'razorpay.html';
+  }
 
-      updateCartTotal();
+ fetchCartProducts();
+
+async function fetchCartProducts() {
+  const username = localStorage.getItem("username");
+  if (!username) {
+    console.error('Username not found in local storage.');
+    return;
+  }
+
+  const apiUrl = `https://rest-api5.onrender.com/get_item/get_cart_items`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": username, // Set the username in the Authorization header
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch cart products');
     }
 
-    function removeItem(button) {
-      const itemContainer = button.parentNode;
-      itemContainer.remove();
+    const data = await response.json();
+    displayCartProducts(data.cart.products);
+  } catch (error) {
+    console.error('Error while fetching cart products:', error);
+  }
+}
 
-      updateCartTotal();
+    // Function to display cart products on the page
+    const placeholderImageUrl = 'https://example.com/placeholder-image.jpg';
 
-      const cartItems = document.querySelectorAll(".cart-item");
-      const emptyCartMessage = document.getElementById("empty-cart-message");
+function displayCartProducts(cartProducts) {
+  const cartItemsContainer = document.getElementById('cart-items');
+  const totalAmountElement = document.getElementById('total-amount');
+  let cartTotal = 0;
 
-      if (cartItems.length === 0) {
-        emptyCartMessage.style.display = "block";
-      }
+  cartItemsContainer.innerHTML = ''; // Clear previous content
+
+  cartProducts.forEach((cartProduct) => {
+    const cartProductElement = document.createElement('div');
+    cartProductElement.classList.add('cart-item');
+    cartProductElement.innerHTML = `
+      <img class="cart-item-image" src="${cartProduct.productImage || placeholderImageUrl}" alt="${cartProduct.productName || 'Product Name'}">
+      <div class="cart-item-details">
+        <div class="cart-item-name">${cartProduct.productName || 'Product Name'}</div>
+        <div class="cart-item-price">₹${(cartProduct.productPrice || 0).toFixed(2)}</div>
+        <div class="cart-item-quantity">
+          <label class="quantity-label">Quantity:</label>
+          <input class="quantity-input" type="number" value="${cartProduct.quantity || 1}" min="1" onchange="updateQuantity(this, '${cartProduct.productName}')">
+        </div>
+        <div class="cart-item-total">₹${((cartProduct.productPrice || 0) * (cartProduct.quantity || 1)).toFixed(2)}</div>
+      </div>
+      <button class="remove-button" onclick="removeItem('${cartProduct.productName}')">Remove</button>
+    `;
+
+    cartItemsContainer.appendChild(cartProductElement);
+
+    // Calculate cart total only if productPrice and quantity are valid
+    if (cartProduct.productPrice && cartProduct.quantity) {
+      cartTotal += cartProduct.productPrice * cartProduct.quantity;
     }
+  });
+  localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+  localStorage.setItem('cartTotal', cartTotal.toFixed(2));
+  totalAmountElement.textContent = `Total Amount: ₹${cartTotal.toFixed(2)}`;
 
-    function updateCartTotal() {
-      const totalElements = document.querySelectorAll(".cart-item-total");
-      let cartTotal = 0;
+  const emptyCartMessage = document.getElementById('empty-cart-message');
+  emptyCartMessage.style.display = cartProducts.length === 0 ? 'block' : 'none';
+}
+// Function to update the quantity of a cart item
+async function updateQuantity(input, productName) {
+  const quantity = parseInt(input.value, 10);
 
-      totalElements.forEach((element) => {
-        const price = parseFloat(element.textContent.slice(1));
-        cartTotal += price;
-      });
+  if (isNaN(quantity) || quantity <= 0) {
+    input.value = 1;
+    return;
+  }
 
-      const totalAmountElement = document.querySelector(".total-amount");
-      totalAmountElement.textContent = "Total Amount: ₹" + cartTotal.toFixed(2);
+  const apiUrl = `https://rest-api5.onrender.com/update_product/update_quantity_by_name`;
+  const requestData = { productName, quantity };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'PATCH', // Use PATCH method to update the quantity
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('jwtToken'),
+        'username': localStorage.getItem('username'),
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (response.ok) {
+      // Quantity updated successfully, update the cart products after successful update
+      fetchCartProducts();
+    } else {
+      const data = await response.json();
+      console.error('Failed to update quantity:', data.error);
     }
+  } catch (error) {
+    console.error('Error while updating quantity:', error);
+  }
+}
 
-    function placeOrder() {
-      // Add your place order functionality here
-      alert("Your order has been placed!");
+
+//function for remove item from cart
+async function removeItem(productName) {
+  const apiUrl = `https://rest-api5.onrender.com/remove_cart/remove_cart?productName=${encodeURIComponent(productName)}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('jwtToken'),
+        'username': localStorage.getItem('username'),
+      },
+    });
+
+    if (response.ok) {
+      // Item removed successfully, update the cart products after successful removal
+      fetchCartProducts();
+    } else {
+      // Handle error responses
+      const data = await response.json();
+      console.error(`Failed to remove item: ${response.status} ${response.statusText}`, data.error);
+    }
+  } catch (error) {
+    console.error('Error while removing item:', error);
+  }
+}
+
+
+function logout() {
+      // Clear the JWT token from local storage
+      localStorage.removeItem("jwtToken");
+
+      // Redirect to the login page after logout
+      window.location.href = "login.html";
     }
 
   </script>

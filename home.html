@@ -28,11 +28,12 @@
       <li><a href="home.html">Home</a></li>
       <li><a href="category.html">Categories</a></li>
       <li><a href="cart.html">Cart</a></li>
-      <li><a href="login.html">Login</a>
-      </li>
+      <li><button class="logout" onclick="logout()">Logout</button></li>
+      <li>welcome to the home page, <span id="username-placeholder"></span></li>
     </ul>
+      
+      
   </nav>
-
   <main>
     <h1 class="heading">Our Trending's Carousel</h1>
     <section class="carousel-section">
@@ -162,6 +163,46 @@
         }
       });
     });
+    function checkAuthentication() {
+      const jwtToken = localStorage.getItem("jwtToken");
+      if (!jwtToken) {
+        // If the token does not exist, redirect the user to the login page
+        window.location.href = "login.html";
+      } else {
+        // If the token exists, decode it to get user information (e.g., username and user ID)
+        const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
+        const userId = decodedToken.user_id;
+        const username = decodedToken.username;
+
+        // Store the user ID and username in local storage
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("username", username);
+
+        // Display the username on the home page
+        document.getElementById("username-placeholder").innerText = username;
+      }
+    }
+
+    // Call the function to check authentication when the document is ready
+    $(document).ready(function () {
+      checkAuthentication();
+
+      // Initialize the Owl Carousel
+      $('.owl-carousel').owlCarousel({
+        // ... (carousel settings)
+      });
+    });
+
+    // Function to handle user logout
+    function logout() {
+      // Clear the user ID and JWT token from local storage
+      localStorage.removeItem("userId");
+      localStorage.removeItem("jwtToken");
+
+      // Redirect to the login page after logout
+      window.location.href = "login.html";
+    }
+
   </script>
 
 </body>

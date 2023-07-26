@@ -8,110 +8,90 @@
 
   <div class="container">
     <h1>Women</h1>
-    
-    <div class="row">
-      <div class="product">
-        <img src="image\women\1.jpg" alt="Product 1">
-        <div class="product-name">Product 1</div>
-        <div class="product-price">₹499</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-      
-      <div class="product">
-        <img src="image\women\2.jpg" alt="Product 2">
-        <div class="product-name">Product 2</div>
-        <div class="product-price">₹199</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-      
-      <div class="product">
-        <img src="image\women\3.jpg" alt="Product 3">
-        <div class="product-name">Product 3</div>
-        <div class="product-price">₹749</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-      
-      <div class="product">
-        <img src="image\women\4.jpg" alt="Product 4">
-        <div class="product-name">Product 4</div>
-        <div class="product-price">₹999</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\5.jpg" alt="Product 5">
-        <div class="product-name">Product 5</div>
-        <div class="product-price">₹899</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\6.jpg" alt="Product 6">
-        <div class="product-name">Product 6</div>
-        <div class="product-price">₹999</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\7.jpg" alt="Product 7">
-        <div class="product-name">Product 7</div>
-        <div class="product-price">₹549</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\8.jpg" alt="Product 8">
-        <div class="product-name">Product 8</div>
-        <div class="product-price">₹199</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\9.jpg" alt="Product 9">
-        <div class="product-name">Product 9</div>
-        <div class="product-price">₹499</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\10.jpg" alt="Product 10">
-        <div class="product-name">Product 10</div>
-        <div class="product-price">₹249</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\11.jpg" alt="Product 10">
-        <div class="product-name">Product 11</div>
-        <div class="product-price">₹299</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-      <div class="product">
-        <img src="image\women\12.jpg" alt="Product 10">
-        <div class="product-name">Product 12</div>
-        <div class="product-price">₹799</div>
-        <button class="add-to-cart-btn">Add to Cart</button>
-      </div>
-
-    </div>
+    <div class="row" id="product-container"></div>
   </div>
   
   <script>
-    // Get all the "Add to Cart" buttons
-    var addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+    // Function to fetch products from the API and display them on the page
+    async function fetchProducts() {
+      const categoryId = 2; // Replace this with the actual categoryId
+      const apiUrl = `https://rest-api5.onrender.com/products/api/products?categoryId=${categoryId}`; // Replace this with the actual API endpoint
 
-    // Add event listener to each button
-    addToCartButtons.forEach(function(button) {
-      button.addEventListener('click', function() {
-        // Perform the logic to add the product to the cart
-        // Replace this code with your actual logic
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-        // Display a confirmation message
-        alert('1 item added to the cart.');
+        if (response.ok) {
+          displayProducts(data);
+        } else {
+          console.error('Failed to fetch products:', data.message);
+        }
+      } catch (error) {
+        console.error('Error while fetching products:', error);
+      }
+    }
+
+    // Function to display products on the page
+    function displayProducts(products) {
+      const productContainer = document.getElementById('product-container');
+      const username = localStorage.getItem("username"); // Change "userId" to "username"
+
+      products.forEach((product) => {
+        const productElement = document.createElement('div');
+        productElement.classList.add('product');
+
+        productElement.innerHTML = `
+          <img src="${product.image}" alt="Product ${product._id}">
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">₹${product.price}</div>
+          <button class="add-to-cart-btn" onclick="addToCart('${product._id}', '${product.name}', ${product.price}, '${product.image}', '${username}')">Add to Cart</button> <!-- Change "userId" to "username" -->
+        `;
+
+        productContainer.appendChild(productElement);
       });
+    }
+
+    // Function to add the product to the cart
+    async function addToCart(productId, productName, productPrice, productImage, username) { // Change the parameter name from "userId" to "username"
+      const quantity = 1; // Replace this with the desired quantity
+
+      const apiUrl = `https://rest-api5.onrender.com/add_cart/add_to_cart`; // Replace this with the actual API endpoint to add the product to the cart
+
+      const data = {
+        username: username, // Change "userId" to "username"
+        productId: productId,
+        productName: productName,
+        productPrice: productPrice,
+        productImage: productImage, // Include the product image in the data object
+        quantity: quantity,
+      };
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        if (response.ok) {
+          // Display a confirmation message
+          alert('1 item added to the cart.');
+        } else {
+          console.error('Failed to add product to cart:', responseData.error);
+        }
+      } catch (error) {
+        console.error('Error while adding product to cart:', error);
+      }
+    }
+
+    // On page load, fetch the products and load them on the page
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchProducts();
     });
   </script>
-
 </body>
 </html>

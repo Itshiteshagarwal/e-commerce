@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Website Template</title>
+  <title>E-cart Shopping</title>
   <style>
     body {
       margin: 0;
@@ -63,6 +63,27 @@
       color: #D7D67B; 
       text-decoration: underline; 
     }
+    .logout {
+      background-color: #4E9781;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    /* Adjust the position of the button within the list item */
+    
+    /* Center the button text within the button */
+    .logout {
+      justify-content: center;
+      align-items: center;
+    }
+    .logout:hover{
+      color: #D7D67B; 
+      text-decoration: underline;
+    }
+    
     
     /* Main content */
     main {
@@ -146,7 +167,8 @@
       <li><a href="home.html">Home</a></li>
       <li><a href="category.html">Categories</a></li>
       <li><a href="cart.html">Cart</a></li>
-      <li><a href="login.html">Login</a>
+      <li><button class="logout" onclick="logout()">Logout</button></li>
+      <li>Welcome to the category page, <span id="username-placeholder"></span></li>
       </li>
     </ul>
   </nav>
@@ -177,7 +199,9 @@
   </footer>
 
   <script>
-    
+    const username = localStorage.getItem("username");
+// Display the username in the welcome message or any other element
+document.getElementById("username-placeholder").innerText = username;
     const urlParams = new URLSearchParams(window.location.search);
     const categoryKey = urlParams.get('key');
 
@@ -207,6 +231,14 @@
       }
 
       element.classList.add('selected');
+
+    }
+    function logout() {
+      // Clear the JWT token from local storage
+      localStorage.removeItem("jwtToken");
+
+      // Redirect to the login page after logout
+      window.location.href = "login.html";
     }
   </script>
 </body>

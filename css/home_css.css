@@ -57,6 +57,28 @@
       display: inline-block;
       margin: 0 10px;
     }
+    .logout {
+      background-color: #4E9781;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    /* Adjust the position of the button within the list item */
+    
+    /* Center the button text within the button */
+    .logout {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logout:hover{
+      color: #D7D67B; 
+      text-decoration: underline;
+    }
+    
 
     nav ul li a {
       color: #fff;
