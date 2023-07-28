@@ -298,8 +298,8 @@
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("username", username); // Save the username instead of userId
     
-            // Redirect to home.html after successful login
-            window.location.href = "home.html";
+            // Redirect to index.html after successful login
+            window.location.href = "index.html";
           } else {
             // Handle login error (show error message)
             errorMessage.innerText = data.msg || "Login failed: Something went wrong.";
