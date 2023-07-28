@@ -5,24 +5,56 @@
   <title>Payment Successful</title>
 </head>
 <body>
-  <h1>Payment Successful!</h1>
-  <h2>Thank you for shopping with , Happy cart!!</h2>
-  <p>Username: <span id="usernameDisplay"></span></p>
-  <p>Amount Paid: <span id="amountPaid"></span> rupees</p>
-  <p>Email: <span id="emailDisplay"></span></p>
-  <p>Delivery Address: <span id="deliveryAddressDisplay"></span></p>
-  <p>Delivery Date: <span id="deliveryDateDisplay"></span></p>
-  <h1>Visit again!!</h1>
+  <div class="background-pattern"></div>
+  <div class="container">
+    <div class="success-box">
+      <h1>Payment Successful!</h1>
+      <h2>Thank you for shopping with Happy Cart!!</h2>
+      <p>Username: <span id="usernameDisplay"></span></p>
+      <p>Amount Paid: <span id="amountPaid"></span> rupees</p>
+      <p>Email: <span id="emailDisplay"></span></p>
+      <p>Delivery Address: <span id="deliveryAddressDisplay"></span></p>
+      <p>Delivery Date: <span id="deliveryDateDisplay"></span></p>
+      <h1>Visit again!!</h1>
 
-  <!-- Button to print the receipt -->
-  <button onclick="printReceipt()">Print Receipt</button>
+      <!-- Button to print the receipt -->
+      <button onclick="printReceipt()">Print Receipt</button>
+    </div>
+  </div>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      line-height: 1.6;
+   html, body {
+      font-family: "Poppins", sans-serif;
+      background-image: url(https://4kwallpapers.com/images/walls/thumbs_2t/1455.jpg);
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 2em;
       margin: 0;
-      padding: 0;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      overflow: hidden; 
+    }
+
+    .background-pattern {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("https://subtlepatterns.com/patterns/geometry2.png");
+      opacity: 0.5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
     }
     p{
       text-align: center;
@@ -56,11 +88,10 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 20px;
     }
-
     .success-box {
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -68,7 +99,10 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       padding: 20px;
       animation: fadeIn 0.5s ease;
+      max-width: 1000px;
     }
+
+ 
 
     .success-box p {
       margin: 5px 0;
@@ -131,6 +165,7 @@
     // Function to print the receipt
     function printReceipt() {
       window.print();
+      alert("Order Confirmed! Thank you for your purchase!");
     }
   </script>
 </body>
