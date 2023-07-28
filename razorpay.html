@@ -159,27 +159,6 @@
       }
     }
 
-    function showPaymentDetails(username, amountPaid, email, deliveryAddress) {
-      localStorage.setItem('username', username);
-      localStorage.setItem('amountPaid', amountPaid);
-      localStorage.setItem('email', email);
-      localStorage.setItem('deliveryAddress', deliveryAddress);
-
-      const paymentDetailsSection = document.getElementById('paymentDetails');
-      paymentDetailsSection.style.display = 'block';
-
-      // Display the payment details on the page
-      document.getElementById('usernameDisplay').textContent = username;
-      document.getElementById('amountPaid').textContent = amountPaid;
-      document.getElementById('emailDisplay').textContent = email;
-      document.getElementById('deliveryAddressDisplay').textContent = deliveryAddress;
-
-      // Calculate the delivery date (2 days from the current date)
-      const currentDate = new Date();
-      const deliveryDate = new Date(currentDate.getTime() + 2 * 24 * 60 * 60 * 1000); // Add 2 days in milliseconds
-      document.getElementById('deliveryDateDisplay').textContent = deliveryDate.toDateString();
-    }
-
     // Function to handle the success scenario after the payment is complete
     function verifyPayment(orderId, paymentId, signature) {
       const username = localStorage.getItem('username');
